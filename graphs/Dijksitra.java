@@ -98,46 +98,47 @@ public class Dijksitra {
 
 	}
 
-	public static int[] solve(int A, int[][] B, int C) { // A : no of nodes, B: edges in graph, C: source
-		
+	public static int[] solve(int V, int[][] edges, int src) { // V : no of nodes
+
 		// step1: create an adjacency list
-		ArrayList<Pair>[] adj = new ArrayList[A];
-		for (int i = 0; i < A; i++) {
+		ArrayList<Pair> adj[] = new ArrayList[V];
+		for (int i = 0; i < V; i++) {
 			adj[i] = new ArrayList<>();
 		}
-		for (int i = 0; i < B.length; i++) {
-			int source = B[i][0];
-			int destination = B[i][1];
-			int weight = B[i][2];
+		//create edges in the graph
+		for (int i = 0; i < edges.length; i++) {
+			int source = edges[i][0];
+			int destination = edges[i][1];
+			int weight = edges[i][2];
 			adj[source].add(new Pair(source, destination, weight));
 			adj[destination].add(new Pair(destination, source, weight));
 
 		}
 		// step2: Getting shortest distance from Source to node i
-		int[] dist = new int[A];
+		int[] dist = new int[V];
 		Arrays.fill(dist, Integer.MAX_VALUE);
-		dist[C] = 0;
+		dist[src] = 0;
 		PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
-		pq.add(new Pair(C, C, 0));
+		pq.add(new Pair(src, src, 0));
 		while (!pq.isEmpty()) {
-			Pair x = pq.poll();
-			int u = x.destination;
-			int w = x.weight;
+			Pair rp = pq.poll();
+			int u = rp.destination;
+			int w = rp.weight;
 			if (w > dist[u])
 				continue;
-			int n = adj[u].size();
-			for (int i = 0; i < n; i++) {
-				Pair nbr = adj[u].get(i);
+
+			for (Pair nbr : adj[u]) {
 				int v = nbr.destination;
 				int weight = nbr.weight;
 				if (dist[u] + weight < dist[v]) {
-					dist[v] = dist[u] + weight;
+					dist[v] = dist[u] + weight;//weight so far
 					pq.add(new Pair(u, v, dist[v]));
 				}
 			}
 		}
+
 		// check if all nodes are reachable
-		for (int i = 0; i < A; i++) {
+		for (int i = 0; i < V; i++) {
 			if (dist[i] == Integer.MAX_VALUE)
 				dist[i] = -1;
 		}
