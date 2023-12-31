@@ -28,9 +28,9 @@ public class FractionalKnapsack {
 		int profit, weight;
 
 		// Item value function
-		public ItemValue(int val, int wt) {
-			this.weight = wt;
-			this.profit = val;
+		public ItemValue(int profit, int weight) {
+			this.weight = weight;
+			this.profit = profit;
 		}
 	}
 
@@ -51,16 +51,16 @@ public class FractionalKnapsack {
 		double ans = 0d;
 		for (ItemValue i : arr) {
 			int curWt = (int) i.weight;
-			int curVal = (int) i.profit;
-			if (capacity - curWt >= 0) {
+			int curprofit = (int) i.profit;
+			if (curWt <= capacity) {
+				ans += curprofit;
 				// this weight can be picked as whole
-				capacity = capacity - curWt;
-				ans += curVal;
+				capacity -= curWt;
+				
 			} else {
 				// item can't be picked as whole
-				double fraction = ((double) capacity / (double) curWt);
-				ans += curVal * fraction;
-				capacity = (int) (capacity - (curWt * fraction));
+				double fraction = ((double) curprofit / (double) curWt);
+				ans += (int)fraction * capacity;
 				break;
 			}
 		}
@@ -76,5 +76,6 @@ public class FractionalKnapsack {
 		System.out.println("Maximum total profit in knapsack :: " + maxValue);
 
 	}
+	//Time Complexity: O(N * logN), Auxiliary Space: O(N)
 
 }
