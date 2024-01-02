@@ -1,6 +1,3 @@
-/**
- * 
- */
 package DynamicProgramming.three;
 
 /** Given N toys with their happiness and weight. Find maximum total happiness that can be kept in a bag with capacity W.
@@ -8,22 +5,25 @@ package DynamicProgramming.three;
  *
  */
 public class ZeroOneKnapSack {
-
 	// Returns the maximum value that can be put in a knapsack of capacity W
-	static int knapSack(int W, int wt[], int val[], int N) {
+	static int knapSack(int W, int weight[], int profit[], int N) {
 		int i, j;
 		int dp[][] = new int[N + 1][W + 1];
-
-		// Build table dp[][] in bottom up manner 
-
+		// Build table dp[][] in bottom up manner
 		for (i = 1; i <= N; i++) {
 			for (j = 1; j <= W; j++) {
+				// base condition
 				if (i == 0 || j == 0)
 					dp[i][j] = 0;
-				else if (wt[i - 1] <= j)
-					dp[i][j] = Math.max(val[i - 1] + dp[i - 1][j - wt[i - 1]], dp[i - 1][j]);
-				else
-					dp[i][j] = dp[i - 1][j];
+				// calculate the maximum value when current items is not taken
+				int notTaken = dp[i - 1][j];
+				// calculate the maximum value when current items is taken
+				int taken = Integer.MIN_VALUE;
+				if (weight[i - 1] <= j) {
+					taken = profit[i - 1] + dp[i - 1][j - weight[i - 1]];
+				}
+				// store the maximum value for the current state
+				dp[i][j] = Math.max(notTaken, taken);
 			}
 		}
 
