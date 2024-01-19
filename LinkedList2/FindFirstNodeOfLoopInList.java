@@ -41,16 +41,14 @@ public class FindFirstNodeOfLoopInList {
 			return null;
 		}
 		Node slow = head, fast = head;
-		slow = slow.next;
-		fast = fast.next.next;
-
+		
 		// search for loop using slow & fast pointers
 		while (fast != null && fast.next != null) {
-			if (slow == fast)
-				break;
 			slow = slow.next;
 			fast = fast.next.next;
-
+			if (slow == fast)
+				break;
+	
 		}
 		// if loop doesn't exist
 		if (slow != fast) {
