@@ -51,17 +51,49 @@ Explanation 2:
  */
 public class WildCardPatternMatching {
 	
-	//bottom-up approach:
+	//Top-down or Memoization approach
+	public static boolean isMatchMemo(String s, String p) {
+		int n = s.length();
+		int m = p.length();
+		if (m == 0 && n != 0)
+			return false;
 
-	public static int isMatch(final String A, final String B) {
-		if (helper(A, B) == true)
-			return 1;
-		else {
-			return 0;
+		boolean[][] dp = new boolean[n][m];
+		return match(s, p, n - 1, m - 1, dp);
+	}
+
+	public static boolean match(String s, String p, int n, int m, boolean[][] dp) {
+		// Base Case
+		// if n and m both are 0 i.e strings are matching
+		if (n < 0 && m < 0)
+			return true;
+		// if n has some char but m is empty
+		if (n >= 0 && m < 0)
+			return false;
+		// if m has some char but n is empty
+		if (n < 0 && m >= 0) {
+			// String p contains all '*' till j'th index
+			for (int i = 0; i <= m; i++)
+				if (p.charAt(i) != '*')
+					return false;
+			return true;
 		}
+
+		if (dp[n][m])
+			return dp[n][m];
+
+		if (s.charAt(n) == p.charAt(m) || p.charAt(m) == '?')
+			return dp[n][m] = match(s, p, n - 1, m - 1, dp);
+		else if (p.charAt(m) == '*')
+			return dp[n][m] = match(s, p, n - 1, m, dp) || match(s, p, n, m - 1, dp);
+		else {// if both char are not equal
+			return false;
+		}
+
 	}
 	
-	public static boolean helper(String s, String p) {
+	//Tabulation or bottum-up approach
+	public static boolean isMatchTab(String s, String p) {
 		if (s == null || p == null)
 			return false;
 
@@ -89,12 +121,14 @@ public class WildCardPatternMatching {
 		return dp[N][M];
 		// Time Complexity: O(N*M), Space Complexity: O(N*M)
 	}
-		
 	
 
 	public static void main(String[] args) {
+		String S = "xbbzzc", P = "x*z*";
 		String s = "aa", p = "*";
-		System.out.println("Bottom-up approch::" + isMatch(s, p));
+		System.out.println("Memoization  approch::" + isMatchMemo(s, p));
+		System.out.println("Tabulation  approch::" + isMatchTab(s, p));
+
 	}
 
 }
