@@ -32,24 +32,27 @@ public class RussianDollEnvelope {
 	
 	public static int maxEnvelopes(int[][] envelopes) {
 		int n = envelopes.length;
-		Arrays.sort(envelopes, (a, b) -> Double.compare(a[0], b[0]));
+		if (n == 0)
+			return n;
+		// sort enevelopes in increasing order
+		Arrays.sort(envelopes, (a, b) -> (a[0] != b[0]) ? a[0] - b[0] : a[1] - b[1]);
 		int dp[] = new int[n];
 		dp[0] = 1;
 		int ans = 1;
+		// apply LIS on width
 		for (int i = 1; i < n; i++) {
 			int max = 0;
 			for (int j = 0; j < i; j++) {
 				if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1]) {
-					if (dp[j] > max)
-						max = dp[j];
+					max = Math.max(max, dp[j]);
 				}
 			}
 			dp[i] = max + 1;
-			if (ans < dp[i])
-				ans = dp[i];
+			ans = Math.max(ans, dp[i]);
 		}
 		return ans;
 	}
+	// Time Complexity: O(n^2), Space Complexity: O(n)
 
 	public static void main(String[] args) {
 		int[][] envelopes = { { 5, 4 }, { 6, 4 }, { 6, 7 }, { 2, 3 } };
