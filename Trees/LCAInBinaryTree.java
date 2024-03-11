@@ -18,36 +18,34 @@ class TreeNode{
 	}
 }
 
-public class LCAInBST {
-
+public class LCAInBinaryTree {
 	static TreeNode root;
-	static int lca(TreeNode root, int n1, int n2) {
-		while(root != null) {
-			if(n1 < root.val && n2 < root.val) {
-				root = root.left;
-			}
-			else if(n1 > root.val && n2 > root.val) {
-				root = root.right;
-			}else {
-				break;
-			}
-		}
-		return root.val;
-	}
+
 	
-	public static void main(String[] args) {
-		LCAInBST tree = new LCAInBST();
-		tree.root = new TreeNode(20);
-		tree.root.left = new TreeNode(8);
-        tree.root.right = new TreeNode(22);
-        tree.root.left.left = new TreeNode(4);
-        tree.root.left.right = new TreeNode(12);
-        tree.root.left.right.left = new TreeNode(10);
-        tree.root.left.right.right = new TreeNode(14);
-        int n1 = 10, n2 = 14;
-        int node = tree.lca(root, n1, n2);
-        System.out.println("LCA of " + n1 + " and " + n2 + " is "+ node);
+
+	public static TreeNode findLCA(TreeNode root, int p, int q) {
+		if (root == null) return null;
+		if (root.val == p || root.val== q) return root;
+		TreeNode left = findLCA(root.left, p, q);
+		TreeNode right = findLCA(root.right, p, q);
+		if(left == null) return right;
+		else if(right == null) return left;
+		else return root;
 
 	}
-//T.C: O(H),S.c:O(H)
+
+	public static void main(String[] args) {
+		LCAInBinaryTree tree = new LCAInBinaryTree();
+		root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.right = new TreeNode(3);
+		root.left.left = new TreeNode(4);
+		root.left.right = new TreeNode(5);
+		root.right.left = new TreeNode(6);
+		root.right.right = new TreeNode(7);
+		System.out.println("LCA(4, 5) = " + tree.findLCA(root, 4, 5).val);
+		
+
+	}
+
 }
